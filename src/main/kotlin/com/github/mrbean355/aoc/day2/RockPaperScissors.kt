@@ -1,29 +1,40 @@
 package com.github.mrbean355.aoc.day2
 
-const val Rock = 'A'
-const val Paper = 'B'
-const val Scissors = 'C'
-
-private val winners = mapOf(
-    Rock to Scissors,
-    Scissors to Paper,
-    Paper to Rock,
-)
-
-private val points = mapOf(
-    Rock to 1,
-    Paper to 2,
-    Scissors to 3,
-)
-
-private fun Char.beats(other: Char): Boolean {
-    return winners[this] == other
+enum class Move {
+    Rock, Paper, Scissors
 }
 
-fun battle(them: Char, me: Char): Int {
-    return when {
-        them == me -> 3
-        me.beats(them) -> 6
+private val winners = mapOf(
+    Move.Rock to Move.Scissors,
+    Move.Scissors to Move.Paper,
+    Move.Paper to Move.Rock,
+)
+
+enum class Outcome {
+    Win, Lose, Draw
+}
+
+fun calculatePoints(them: Move, me: Move): Int {
+    val movePoints = when (me) {
+        Move.Rock -> 1
+        Move.Paper -> 2
+        Move.Scissors -> 3
+    }
+    val outcomePoints = when (them) {
+        me -> 3
+        winners[me] -> 6
         else -> 0
-    } + points.getValue(me)
+    }
+
+    return movePoints + outcomePoints
+}
+
+/** @return the move that beats [this]. */
+fun Move.getWinningMove(): Move {
+    return winners.entries.first { it.value == this }.key
+}
+
+/** @return the move that is beaten by [this]. */
+fun Move.getLosingMove(): Move {
+    return winners.getValue(this)
 }
