@@ -10,7 +10,13 @@ class Day10Test : PuzzleTest(Day10::class) {
     )
 
     override val part2TestCases = mapOf(
-        "day10/puzzle.txt" to "PGHFGLUG",
+        "day10/puzzle.txt" to
+                "###   ##  #  # ####  ##  #    #  #  ##  \n" +
+                "#  # #  # #  # #    #  # #    #  # #  # \n" +
+                "#  # #    #### ###  #    #    #  # #    \n" +
+                "###  # ## #  # #    # ## #    #  # # ## \n" +
+                "#    #  # #  # #    #  # #    #  # #  # \n" +
+                "#     ### #  # #     ### ####  ##   ### ",
     )
 
 }

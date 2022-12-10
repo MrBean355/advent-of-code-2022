@@ -2,84 +2,63 @@ package com.github.mrbean355.aoc.day10
 
 import com.github.mrbean355.aoc.base.Puzzle
 
+private const val CRT_WIDTH = 40
+private const val CRT_HEIGHT = 6
+
 class Day10(private val input: List<String>) : Puzzle {
 
-    private var x = 1
+    private var register = 1
     private var cycles = 0
-    private var signalStrength = 0
-
+    private var totalSignalStrength = 0
     private val drawnPixels = mutableListOf<Int>()
-    private var row = 0
 
     override fun part1(): Number {
-        input.forEach { instruction ->
-            when {
-                instruction == "noop" -> cycle()
-                instruction.startsWith("addx") -> {
-                    cycle()
-                    cycle()
-                    x += instruction.substringAfter(' ').toInt()
-                }
-
-                else -> error("Unexpected instruction: $instruction")
-            }
-        }
-
-        return signalStrength
+        executeCommands()
+        return totalSignalStrength
     }
 
     override fun part2(): String {
-        input.forEach { instruction ->
+        executeCommands()
+        return renderImage()
+    }
+
+    private fun executeCommands() {
+        input.forEach { command ->
             when {
-                instruction == "noop" -> cycle2()
-                instruction.startsWith("addx") -> {
-                    cycle2()
-                    cycle2()
-                    x += instruction.substringAfter(' ').toInt()
+                command == "noop" -> cycle()
+                command.startsWith("addx") -> {
+                    cycle()
+                    cycle()
+                    register += command.substringAfter(' ').toInt()
                 }
 
-                else -> error("Unexpected instruction: $instruction")
+                else -> error("Unexpected command: $command")
             }
         }
-
-        draw()
-        return "PGHFGLUG"
     }
 
     private fun cycle() {
+        if (cycles % CRT_WIDTH in (register - 1..register + 1)) {
+            // Draw the current pixel if it lines up with the sprite's position.
+            drawnPixels += cycles
+        }
+
         ++cycles
 
         if (cycles == 20 || (cycles - 20) % 40 == 0) {
-            signalStrength += cycles * x
+            totalSignalStrength += cycles * register
         }
     }
 
-    private fun cycle2() {
-        if (cycles in (x - 1..x + 1)) {
-            drawnPixels += (cycles + row * 40)
-        }
-
-        ++cycles
-
-        if (cycles % 40 == 0) {
-            cycles = 0
-            ++row
-        }
-    }
-
-    private fun draw() {
-        val str = buildString {
-            repeat(240) {
-                if (it % 40 == 0) {
-                    appendLine()
-                }
+    private fun renderImage(): String {
+        return buildString {
+            repeat(CRT_WIDTH * CRT_HEIGHT) {
                 if (it in drawnPixels) {
                     append('#')
                 } else {
-                    append('.')
+                    append(' ')
                 }
             }
-        }
-        println(str)
+        }.chunked(CRT_WIDTH).joinToString(separator = "\n")
     }
 }
