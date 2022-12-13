@@ -9,6 +9,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jgrapht:jgrapht-core:1.5.1")
     testImplementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("junit:junit:4.13.2")
 }
