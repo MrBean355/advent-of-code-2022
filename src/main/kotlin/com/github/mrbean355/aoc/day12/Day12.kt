@@ -9,6 +9,6 @@ class Day12(private val input: List<String>) : Puzzle {
     }
 
     override fun part2(): Number {
-        TODO("Not yet implemented")
+        return HeightMap.from(input).findOverallShortestPath()
     }
 }

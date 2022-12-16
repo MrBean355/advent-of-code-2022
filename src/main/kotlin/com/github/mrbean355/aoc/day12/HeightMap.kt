@@ -20,7 +20,7 @@ class HeightMap(
         }
     }
 
-    fun findShortestPath(): Int {
+    fun findShortestPath(fromIndex: Int = startIndex): Int {
         val dist = mutableMapOf<Int, Int>()
         val prev = mutableMapOf<Int, Int>()
         val q = mutableListOf<Int>()
@@ -30,7 +30,7 @@ class HeightMap(
             q += v
         }
 
-        dist[startIndex] = 0
+        dist[fromIndex] = 0
 
         while (q.isNotEmpty()) {
             val u = q.minBy(dist::getValue)
@@ -60,6 +60,15 @@ class HeightMap(
         }
 
         return s.size - 1
+    }
+
+    fun findOverallShortestPath(): Int {
+        val startPoints = heights.withIndex()
+            .filter { it.value == 'a' }
+
+        return startPoints.minOf {
+            findShortestPath(it.index)
+        }
     }
 
     private fun getNeighbours(index: Int): List<Int> {
